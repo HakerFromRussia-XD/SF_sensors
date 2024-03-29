@@ -5,18 +5,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.widget.TextView;
-import java.util.concurrent.TimeUnit;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SensorEventListener {
     private TextView textView;
     private SensorManager sensorManager;
-    private Sensor sensor;
-
-    private Thread threadSensors = null;
+    private int accuracy = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,31 +24,32 @@ public class MainActivity extends AppCompatActivity {
 
         textView = findViewById(R.id.textView);
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-
-        assert sensor != null;
-        refreshTextView();
     }
 
-    @SuppressLint("SetTextI18n")
-    private void refreshTextView() {
-        threadSensors = new Thread(() ->{
-            while (true) {
-                runOnUiThread(() -> {//показать сначала без запуска на главном потоке
-                    textView.setText(sensor.getName() + "\n" +
-                            sensor.getPower() + "\n" +
-                            sensor.getType() + "\n" +
-                            sensor.getMinDelay());
-                });
-                System.err.println("отправили новые данные "+sensor.getPower());
-                try {
-                    TimeUnit.MILLISECONDS.sleep(1000);
-                } catch (InterruptedException e) {
-                    System.err.println("случилось непредвиденное дерьмо!");
-                }
-            }
-        });
-        threadSensors.start();
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        float changedValue = event.values[0];
+        textView.setText(String.valueOf(changedValue));
+        System.err.println("отправили новые данные "+event.values[0]);
     }
 
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        System.err.println("accuracy changed = "+accuracy);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        System.err.println("onResume()");
+        accuracy += 1;
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT), accuracy);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        System.err.println("onPause()");
+        sensorManager.unregisterListener(this);
+    }
 }
