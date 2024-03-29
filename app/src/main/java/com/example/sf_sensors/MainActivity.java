@@ -7,13 +7,12 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.widget.TextView;
-import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
     private TextView textView;
     private SensorManager sensorManager;
-    private List<Sensor> deviceSensors;
+    private Sensor sensor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,16 +21,12 @@ public class MainActivity extends AppCompatActivity {
 
         textView = findViewById(R.id.textView);
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        deviceSensors = sensorManager.getSensorList(Sensor.TYPE_ALL);
+        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
-
-//        textView.setText(deviceSensors.toString());
-        printSensors();
-    }
-
-    private void printSensors() {
-        for (Sensor sensor : deviceSensors){
-            textView.setText(textView.getText()+"\n"+sensor.getName());
-        }
+        assert sensor != null;
+        textView.setText(String.valueOf(sensor.getName())+"\n"+
+                String.valueOf(sensor.getPower())+"\n"+
+                String.valueOf(sensor.getType())+"\n"+
+                String.valueOf(sensor.getMinDelay()));
     }
 }
