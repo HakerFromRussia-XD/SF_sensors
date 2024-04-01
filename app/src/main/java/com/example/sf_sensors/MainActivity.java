@@ -1,8 +1,5 @@
 package com.example.sf_sensors;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -10,12 +7,13 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
 
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
     private TextView textView;
     private SensorManager sensorManager;
-    private int accuracy = 0;
+    private Sensor sensor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +22,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         textView = findViewById(R.id.textView);
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+
+        if (sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE) != null) {
+            sensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        } else {
+            System.err.println("нет гироскопа");
+        }
     }
 
     @Override
@@ -34,16 +38,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        System.err.println("accuracy changed = "+accuracy);
-    }
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {}
 
     @Override
     protected void onResume() {
         super.onResume();
         System.err.println("onResume()");
-        accuracy += 1;
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT), accuracy);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     @Override
