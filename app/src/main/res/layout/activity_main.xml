@@ -7,30 +7,22 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/x_tv"
+        android:id="@+id/step_counter_tv"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:text="X accelerometer = "
+        android:text="step counter = "
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/y_tv"
+        android:id="@+id/step_detector_tv"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:text="Y accelerometer = "
+        android:text="step detector = "
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/x_tv" />
+        app:layout_constraintTop_toBottomOf="@+id/step_counter_tv" />
 
-    <TextView
-        android:id="@+id/z_tv"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:text="Z accelerometer = "
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/y_tv" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
