@@ -11,6 +11,9 @@ import android.os.Vibrator;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.airbnb.lottie.Lottie;
+import com.airbnb.lottie.LottieAnimationView;
+
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
     private TextView step_counter_tv, step_detector_tv;
@@ -18,23 +21,22 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Sensor stepCounter;
     private int stepCount = 0;
 
+    private LottieAnimationView animationView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        step_counter_tv = findViewById(R.id.step_counter_tv);
-        step_detector_tv = findViewById(R.id.step_detector_tv);
-        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        animationView = findViewById(R.id.animationView);
+        animationView.setAnimation("loader_3.json");
 
+
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null){
             stepCounter = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
         } else {
             System.err.println("Датчик ускорения недоступен");
-        }
-
-        if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) != null) {
-
         }
     }
 
